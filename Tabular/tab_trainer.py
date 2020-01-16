@@ -4,8 +4,6 @@ import hydra
 from omegaconf import DictConfig
 import logging
 
-
-
 @hydra.main(config_path="./conf/config.yaml")
 def tab_trainer(cfg: DictConfig) -> None:
     # A logger for this file
@@ -49,6 +47,8 @@ def tab_trainer(cfg: DictConfig) -> None:
         log.info(learn.predict(train_df.iloc[i]))
         log.info('Prediction on test set item <' + str(i) + '> actual is unknown: ')
         log.info(learn.predict(test_df.iloc[i]))
+    log.info('Run Complete')
+    logging.shutdown()
 
 if __name__ == "__main__":
     tab_trainer()
