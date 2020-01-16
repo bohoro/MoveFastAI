@@ -16,8 +16,8 @@ def tab_trainer(cfg: DictConfig) -> None:
     # #############################################################################
     # Read the train and test data
     # #############################################################################
-    train_df = pd.read_csv(cfg.dataset.path + 'train.csv.gz')
-    test_df = pd.read_csv(cfg.dataset.path + 'test.csv.gz')
+    train_df = pd.read_csv(cfg.dataset.training_data)
+    test_df = pd.read_csv(cfg.dataset.testing_data)
     train_df = train_df.drop('id', 1)
     test_df = test_df.drop('id', 1)
 
@@ -28,7 +28,7 @@ def tab_trainer(cfg: DictConfig) -> None:
     valid_idx = random.sample(range(0, len(train_df)-1), val_set_size)
     procs = [FillMissing, Normalize]
     dep_var = 'target'
-    path = cfg.dataset.path + 'train.csv.gz'
+    path = cfg.dataset.training_data
     valid_idx = valid_idx
     data = TabularDataBunch.from_df(
         path=path, df=train_df, procs=procs, dep_var=dep_var, test_df=test_df, valid_idx=valid_idx)

@@ -1,2 +1,8 @@
 defaults:
- - dataset: mac_os
+  - dataset: pssdp_mac
+
+dataset:
+ name: ???
+ path: ???
+ training_data: ${dataset.path}/train.csv.gz
+ testing_data: ${dataset.path}/test.csv.gz

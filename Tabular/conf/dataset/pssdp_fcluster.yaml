@@ -1,0 +1,4 @@
+dataset:
+  name: pssdp_fcluster
+  path: ${env:HOME}/MoveFastAI/Tabular/data/
+
