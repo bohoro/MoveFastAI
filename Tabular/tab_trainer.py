@@ -3,6 +3,7 @@ import random
 import hydra
 from omegaconf import DictConfig
 import logging
+from fastai.callbacks.oversampling import OverSamplingCallback
 
 @hydra.main(config_path="./conf/config.yaml")
 def tab_trainer(cfg: DictConfig) -> None:
@@ -34,9 +35,9 @@ def tab_trainer(cfg: DictConfig) -> None:
     # #############################################################################
     # Train
     # #############################################################################
-    #layers = [512, 256, 128]
-    layers = [32, 16]
-    learn = tabular_learner(data, layers=layers, metrics=[accuracy, dice])
+    layers = [512, 256, 128]
+    #layers = [32, 16]
+    learn = tabular_learner(data, layers=layers, metrics=[accuracy, dice], callback_fns=[OverSamplingCallback])
     learn.fit_one_cycle(1, 1e-2)
 
     # #############################################################################
