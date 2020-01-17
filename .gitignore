@@ -3,3 +3,4 @@
 /Tabular/outputs/*
 /Tabular/multirun/*
 Tabular/data/predictions/pssdp_predictions.csv
+Tabular/data/models/models/tmp.pth
