@@ -49,13 +49,15 @@ def tab_trainer(cfg: DictConfig) -> None:
     # Train
     # #############################################################################
     layers = [2048, 1024]
-    #layers = [32, 16]
     learn = tabular_learner(data, layers=layers, metrics=[accuracy, dice], callback_fns=[OverSamplingCallback], path=cfg.dataset.model_data)
-    learn.lr_find()
-    fit = learn.recorder.plot(return_fig=True)
-    fit.savefig(cfg.dataset.model_data + './lr_rate.png')
-    log.info('Learning Rate Plot saved to ' + cfg.dataset.model_data + './lr_rate.png')
-    learn.fit_one_cycle(10, 1e-4)
+
+    # Determine optimal lr - do once - found lr = 1e-4
+    # learn.lr_find()
+    # fit = learn.recorder.plot(return_fig=True)
+    # fit.savefig(cfg.dataset.model_data + 'lr_rate.png')
+    # log.info('Learning Rate Plot saved to ' + cfg.dataset.model_data + 'lr_rate.png')
+
+    learn.fit_one_cycle(5, 1e-4)
 
     # #############################################################################
     # Test Predictions
