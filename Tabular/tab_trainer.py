@@ -41,7 +41,7 @@ def tab_trainer(cfg: DictConfig) -> None:
     layers = [2048, 1024]
     #layers = [32, 16]
     learn = tabular_learner(data, layers=layers, metrics=[accuracy, dice], callback_fns=[OverSamplingCallback])
-    learn.fit_one_cycle(1, 1e-2)
+    learn.fit_one_cycle(2, 1e-2)
 
     # #############################################################################
     # Test Predictions
