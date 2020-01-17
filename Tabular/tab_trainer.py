@@ -57,7 +57,7 @@ def tab_trainer(cfg: DictConfig) -> None:
     # fit.savefig(cfg.dataset.model_data + 'lr_rate.png')
     # log.info('Learning Rate Plot saved to ' + cfg.dataset.model_data + 'lr_rate.png')
 
-    learn.fit_one_cycle(5, 1e-4)
+    learn.fit_one_cycle(4, 1e-4)
 
     # #############################################################################
     # Test Predictions
