@@ -12,9 +12,19 @@ def tab_trainer(cfg: DictConfig) -> None:
     # A logger for this file
     log = logging.getLogger(__name__)
     log.info('Starting Tabular Trainner with Configs:')
-    log.info('Torch Cude is: ' + str(torch.cuda.is_available()))
+    log.info('Torch Cuda is: ' + str(torch.cuda.is_available()))
     log.info(cfg.pretty())
-    random.seed(42)
+
+    # #############################################################################
+    # For Reproducability
+    # #############################################################################
+    seed = 42
+    random.seed(seed)
+    torch.manual_seed(seed)
+    torch.backends.cudnn.deterministic = True
+    if torch.cuda.is_available(): torch.cuda.manual_seed_all(seed)
+    np.random.seed(seed)
+
     # #############################################################################
     # Read the train and test data
     # #############################################################################
@@ -40,8 +50,12 @@ def tab_trainer(cfg: DictConfig) -> None:
     # #############################################################################
     layers = [2048, 1024]
     #layers = [32, 16]
-    learn = tabular_learner(data, layers=layers, metrics=[accuracy, dice], callback_fns=[OverSamplingCallback])
-    learn.fit_one_cycle(2, 1e-2)
+    learn = tabular_learner(data, layers=layers, metrics=[accuracy, dice], callback_fns=[OverSamplingCallback], path=cfg.dataset.model_data)
+    learn.lr_find()
+    fit = learn.recorder.plot(return_fig=True)
+    fit.savefig(cfg.dataset.model_data + './lr_rate.png')
+    log.info('Learning Rate Plot saved to ' + cfg.dataset.model_data + './lr_rate.png'
+    learn.fit_one_cycle(10, 1e-4)
 
     # #############################################################################
     # Test Predictions

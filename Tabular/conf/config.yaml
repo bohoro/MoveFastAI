@@ -7,4 +7,5 @@ dataset:
  training_data: ${dataset.path}/train.csv.gz
  testing_data: ${dataset.path}/test.csv.gz
  prediction_data: ${dataset.path}predictions/pssdp_predictions.csv
+ model_data: ${dataset.path}models/
 
