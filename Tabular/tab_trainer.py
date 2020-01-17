@@ -4,12 +4,15 @@ import hydra
 from omegaconf import DictConfig
 import logging
 from fastai.callbacks.oversampling import OverSamplingCallback
+import torch;
+from tqdm import tqdm
 
 @hydra.main(config_path="./conf/config.yaml")
 def tab_trainer(cfg: DictConfig) -> None:
     # A logger for this file
     log = logging.getLogger(__name__)
     log.info('Starting Tabular Trainner with Configs:')
+    log.info('Torch Cude is: ' + str(torch.cuda.is_available()))
     log.info(cfg.pretty())
     random.seed(42)
     # #############################################################################
@@ -35,7 +38,7 @@ def tab_trainer(cfg: DictConfig) -> None:
     # #############################################################################
     # Train
     # #############################################################################
-    layers = [512, 256, 128]
+    layers = [2048, 1024]
     #layers = [32, 16]
     learn = tabular_learner(data, layers=layers, metrics=[accuracy, dice], callback_fns=[OverSamplingCallback])
     learn.fit_one_cycle(1, 1e-2)
@@ -48,6 +51,20 @@ def tab_trainer(cfg: DictConfig) -> None:
         log.info(learn.predict(train_df.iloc[i]))
         log.info('Prediction on test set item <' + str(i) + '> actual is unknown: ')
         log.info(learn.predict(test_df.iloc[i]))
+
+    # #############################################################################
+    # Test Predictions
+    # #############################################################################
+    log.info('Collecting Predictions')
+    data = []
+    for i in tqdm(range(0,len(test_df)-1)):
+        data.append( [i,learn.predict(test_df.iloc[i])[2][1].item()] )
+
+    log.info('Writing Predictions to ' + cfg.dataset.prediction_data)
+    out_df = pd.DataFrame(data, columns = ['id', 'target'])
+    log.info(out_df.head())
+    out_df.to_csv(cfg.dataset.prediction_data, columns = ['id', 'target'], index=False)
+
     log.info('Run Complete')
     logging.shutdown()
 

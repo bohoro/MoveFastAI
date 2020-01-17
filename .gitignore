@@ -2,3 +2,4 @@
 .DS_Store
 /Tabular/outputs/*
 /Tabular/multirun/*
+Tabular/data/predictions/pssdp_predictions.csv
