@@ -75,7 +75,7 @@ def tab_trainer(cfg: DictConfig) -> None:
     # #############################################################################
     log.info('Collecting Predictions')
     data = []
-    for i in tqdm(range(0,len(test_df)-1)):
+    for i in tqdm(range(0,len(test_df))):
         data.append( [i,learn.predict(test_df.iloc[i])[2][1].item()] )
 
     log.info('Writing Predictions to ' + cfg.dataset.prediction_data)
