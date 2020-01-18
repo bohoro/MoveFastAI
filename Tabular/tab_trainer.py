@@ -59,7 +59,7 @@ def tab_trainer(cfg: DictConfig) -> None:
 
     learn.fit_one_cycle(4, 1e-4)
     learn.fit_one_cycle(2, 2e-7, wd=0.3)
-    learn.fit_one_cycle(1, 2e-11, wd=0.5)
+    # learn.fit_one_cycle(1, 2e-11, wd=0.5)
 
     # #############################################################################
     # Test Predictions
