@@ -7,6 +7,7 @@ from fastai.callbacks.oversampling import OverSamplingCallback
 import torch;
 from tqdm import tqdm
 import os.path
+from fastai.callbacks import SaveModelCallback
 
 
 @hydra.main(config_path="./conf/config.yaml")
