@@ -8,5 +8,5 @@ dataset:
  testing_data: ${dataset.path}/test.csv.gz
  prediction_data: ${dataset.path}predictions/pssdp_predictions.csv
  model_data: ${dataset.path}models/
- best_model: ${dataset.path}models/best_model.pth
+ best_model: ${model_data}models/best_model.pth
 
