@@ -64,7 +64,7 @@ def tab_trainer(cfg: DictConfig) -> None:
         learn.load(cfg.dataset.best_model)
     else:
         log.info('No saved model found at : ' + cfg.dataset.best_model)
-        log.info('Running Trainning Loop)
+        log.info('Running Trainning Loop')
         learn.fit_one_cycle(250, 2e-6, wd=.3, callbacks=[SaveModelCallback(learn, every='improvement', monitor='valid_loss', name='best_model')])
 
     # #############################################################################
