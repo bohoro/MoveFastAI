@@ -60,7 +60,7 @@ def tab_trainer(cfg: DictConfig) -> None:
     # fit.savefig(cfg.dataset.model_data + 'lr_rate.png')
     # log.info('Learning Rate Plot saved to ' + cfg.dataset.model_data + 'lr_rate.png')
 
-    if (os.path.isfile(cfg.dataset.best_model)):
+    if (os.path.isfile(cfg.dataset.best_model+'.pth')):
         log.info('Loading saved model: ' + cfg.dataset.best_model)
         learn.load(cfg.dataset.best_model)
     else:
