@@ -6,6 +6,8 @@ import logging
 from fastai.callbacks.oversampling import OverSamplingCallback
 import torch;
 from tqdm import tqdm
+import os.path
+
 
 @hydra.main(config_path="./conf/config.yaml")
 def tab_trainer(cfg: DictConfig) -> None:
@@ -57,9 +59,13 @@ def tab_trainer(cfg: DictConfig) -> None:
     # fit.savefig(cfg.dataset.model_data + 'lr_rate.png')
     # log.info('Learning Rate Plot saved to ' + cfg.dataset.model_data + 'lr_rate.png')
 
-    learn.fit_one_cycle(4, 1e-4)
-    learn.fit_one_cycle(2, 2e-7, wd=0.3)
-    # learn.fit_one_cycle(1, 2e-11, wd=0.5)
+    if (os.path.isfile(cfg.dataset.best_model)):
+        log.info('Loading saved model: ' + cfg.dataset.best_model)
+        learn.load(cfg.dataset.best_model)
+    else:
+        log.info('No saved model found at : ' + cfg.dataset.best_model)
+        log.info('Running Trainning Loop)
+        learn.fit_one_cycle(250, 2e-6, wd=.3, callbacks=[SaveModelCallback(learn, every='improvement', monitor='valid_loss', name='best_model')])
 
     # #############################################################################
     # Test Predictions
