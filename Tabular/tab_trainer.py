@@ -34,7 +34,6 @@ def tab_trainer(cfg: DictConfig) -> None:
     train_df = pd.read_csv(cfg.dataset.training_data)
     test_df = pd.read_csv(cfg.dataset.testing_data)
     train_df = train_df.drop('id', 1)
-    test_df = test_df.drop('id', 1)
 
     # #############################################################################
     # Preprocess and data bunch
@@ -63,6 +62,7 @@ def tab_trainer(cfg: DictConfig) -> None:
     if (os.path.isfile(cfg.dataset.best_model+'.pth')):
         log.info('Loading saved model: ' + cfg.dataset.best_model)
         learn.load(cfg.dataset.best_model)
+        log.info('Complete')
     else:
         log.info('No saved model found at : ' + cfg.dataset.best_model)
         log.info('Running Trainning Loop')
@@ -74,8 +74,8 @@ def tab_trainer(cfg: DictConfig) -> None:
     for i in range(18,20):
         log.info('Prediction on training set item <' +  str(i) +  '> actual is: ' +  str(train_df.iloc[i]['target']))
         log.info(learn.predict(train_df.iloc[i]))
-        log.info('Prediction on test set item <' + str(i) + '> actual is unknown: ')
-        log.info(learn.predict(test_df.iloc[i]))
+        log.info('Prediction on test set item <' + str(train_df.iloc[i,0]) + '> actual is unknown: ')
+        log.info(learn.predict(test_df.iloc[i,]))
 
     # #############################################################################
     # Test Predictions
@@ -83,8 +83,9 @@ def tab_trainer(cfg: DictConfig) -> None:
     log.info('Collecting Predictions')
     data = []
     for i in tqdm(range(0,len(test_df))):
-        data.append( [i,learn.predict(test_df.iloc[i])[2][1].item()] )
+        data.append([test_df.iloc[i,0],learn.predict(test_df.iloc[i,])[2][1].item()])
 
+    log.info(data)
     log.info('Writing Predictions to ' + cfg.dataset.prediction_data)
     out_df = pd.DataFrame(data, columns = ['id', 'target'])
     log.info(out_df.head())
