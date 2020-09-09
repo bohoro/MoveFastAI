@@ -1,4 +1,0 @@
-dataset:
-  name: pssdp_mac
-  path: ${env:HOME}/Documents/classes/MoveFastAI/Tabular/data/
-
