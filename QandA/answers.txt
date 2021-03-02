@@ -1,0 +1,3 @@
+Answer: 'World War II', score: 0.9704, start: 96, end: 108
+Answer: 'George Cross', score: 0.3807, start: 1823, end: 1835
+
