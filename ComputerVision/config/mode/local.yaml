@@ -1,0 +1,4 @@
+# @package _global_
+trainer:
+  gpus: 0
+  max_steps: 500

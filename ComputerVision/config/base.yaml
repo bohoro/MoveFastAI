@@ -1,0 +1,8 @@
+module:
+  _target_: train.BagClassifier
+  learning_rate: 1e-3
+
+data_module:
+  _target_: train.BagDataModule
+  batch_size: 6
+  root: /Users/bohoro/Documents/github/MoveFastAI/ComputerVision/cnnphotos

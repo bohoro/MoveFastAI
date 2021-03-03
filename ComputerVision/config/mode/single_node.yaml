@@ -1,0 +1,11 @@
+# @package _global_
+defaults:
+  - override /hydra/launcher: submitit_slurm
+
+trainer:
+  gpus: 1
+  max_steps: 500
+
+hydra:
+  launcher:
+    gpus_per_node: 1
