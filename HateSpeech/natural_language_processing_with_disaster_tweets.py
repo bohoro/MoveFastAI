@@ -15,7 +15,7 @@ Original file is located at
 # !pip install -q kaggle
 ### Uploade the kaggle.json API key
 #from google.colab import files
-#files.upload()
+#files.upload() 
 #!mkdir ~/.kaggle
 #!cp kaggle.json ~/.kaggle/
 #!chmod 600 ~/.kaggle/kaggle.json
