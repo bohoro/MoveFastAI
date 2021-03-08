@@ -2,10 +2,11 @@ base_dir = "./"
 #!ls "/content/drive/MyDrive/Colab Notebooks/DisasterTweets"
 
 import pandas as pd
-#import numpy as np
+import numpy as np
 import torch
 
 test=pd.read_csv(base_dir+'test.csv', keep_default_na=False)
+print(test.head(5))
 test["fulltext"] = test["keyword"] + " " + test["location"] + " " + test["text"]
 test_texts = test["fulltext"]
 
@@ -19,32 +20,24 @@ model.from_pretrained(base_dir + "v1model")
 
 print()
 print()
-print(test_texts[0])
-inputs = tokenizer(test_texts[0], return_tensors="pt")
-outputs = model(**inputs)
-print(outputs.logits)
-print()
-print(test_texts[1])
-inputs = tokenizer(test_texts[1], return_tensors="pt")
-outputs = model(**inputs)
-print(outputs.logits)
-print()
-print(test_texts[2])
-inputs = tokenizer(test_texts[2], return_tensors="pt")
-outputs = model(**inputs)
-print(outputs.logits)
-print()
-print(test_texts[3])
-inputs = tokenizer(test_texts[2], return_tensors="pt")
-outputs = model(**inputs)
-print(outputs.logits)
-print()
-print(test_texts[4])
-inputs = tokenizer(test_texts[2], return_tensors="pt")
-outputs = model(**inputs)
-print(outputs.logits)
-print()
-print(test_texts[5])
-inputs = tokenizer(test_texts[2], return_tensors="pt")
-outputs = model(**inputs)
-print(outputs.logits)
+
+predictions = []
+i = 1
+for obs in test_texts:
+    #print(obs)
+    inputs = tokenizer(obs, return_tensors="pt")
+    outputs = model(**inputs)
+    pred = outputs.logits.cpu().detach().numpy()[0]
+    #print(pred, np.argmax(pred))
+    predictions.append(np.argmax(pred))
+
+frame = { 'id': test['id'], 'target': pd.Series(predictions), 'fulltext': test["fulltext"] } 
+preds = pd.DataFrame(frame)
+print(preds.head(5))
+preds.to_csv('predictions.csv')
+
+
+submission = preds[['id', 'target']]
+print(submission.head(5))
+submission.to_csv('submission.csv',index=False)
+
