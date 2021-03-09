@@ -32,6 +32,8 @@ print()
 # #############################################################################
 # sanity check on the training set
 # #############################################################################
+print()
+print("Starting Sanity Checks...")
 
 class DisasterDataset(torch.utils.data.Dataset):
     def __init__(self, encodings, labels):
@@ -47,7 +49,6 @@ class DisasterDataset(torch.utils.data.Dataset):
         return len(self.labels)
     
 val_dataset=pd.read_csv(base_dir+'train.csv', keep_default_na=False)
-print(val_dataset.head(5))
 val_dataset["fulltext"] = val_dataset["keyword"] + " " + val_dataset["location"] + " " + val_dataset["text"]
 val_dataset_t = val_dataset["fulltext"]
 val_encodings = tokenizer(val_dataset_t.tolist(), truncation=True, padding=True)
@@ -55,7 +56,7 @@ val_dataset = DisasterDataset(val_encodings, val_dataset['target'].tolist())
 
 training_args = TrainingArguments(
     output_dir='./results',          # output directory
-    num_train_epochs=1,              # total number of training epochs
+    num_train_epochs=3,              # total number of training epochs
     per_device_train_batch_size=16,  # batch size per device during training
     per_device_eval_batch_size=64,   # batch size for evaluation
     warmup_steps=10,                # number of warmup steps for learning rate scheduler
@@ -85,6 +86,8 @@ trainer = Trainer(
 )
 
 print(trainer.evaluate())
+print("Complete")
+print()
 
 # #############################################################################
 # END sanity check on the training set
@@ -93,31 +96,34 @@ print(trainer.evaluate())
 # #############################################################################
 # Leak data testing
 # #############################################################################
+print()
+print("Leak Testing")
 leak = pd.read_csv(base_dir+'socialmedia-disaster-tweets-DFE.csv', encoding='latin_1', keep_default_na=False)
 leak['target'] = (leak['choose_one']=='Relevant').astype(int)
 leak['id'] = leak.index
 leak = leak[['id', 'keyword','location','text', 'target']]
-print(leak.head(5))
+# print(leak.head(5))
 
 ### test with leaked data ###
 leak["fulltext"] = leak["keyword"] + " " + leak["location"] + " " + leak["text"]
 final_test_encodings = tokenizer(leak["fulltext"].tolist(), truncation=True, padding=True)
 final_test_dataset = DisasterDataset(final_test_encodings, leak['target'].tolist())
 
-print(trainer.evaluate(final_test_dataset))
 
+print(trainer.evaluate(final_test_dataset))
+print("Complete")
+print()
 # #############################################################################
 # END Leak data testing
 # #############################################################################
 
 
-exit(1)
-
 # #############################################################################
 # Create predictions
 # #############################################################################
+print()
+print("Starting Predictions")
 test=pd.read_csv(base_dir+'test.csv', keep_default_na=False)
-print(test.head(5))
 test["fulltext"] = test["keyword"] + " " + test["location"] + " " + test["text"]
 test_texts = test["fulltext"]
 
@@ -125,23 +131,21 @@ test_encodings = tokenizer(test_texts.tolist(), truncation=True, padding=True)
 test_encodings = tokenizer(test_texts.tolist(), truncation=True, padding=True, return_tensors="pt")
 test_encodings.to(device)
 
-print("Starting Predictions")
+
 with torch.no_grad():
     preds = model(**test_encodings)
 print("Complete")
-print(preds)
+
 
 logits = preds.logits.detach().cpu().numpy()
-print(logits)
 pred_flat = np.argmax(logits, axis=1).flatten()
 
-#frame = { 'id': test['id'], 'target': pd.Series(pred_flat), 'logits': logits, 'fulltext': test["fulltext"] } 
+print()
+print("Writing Prediction and Submissions Files")
 frame = { 'id': test['id'], 'target': pd.Series(pred_flat), 'fulltext': test["fulltext"] } 
 preds_out = pd.DataFrame(frame)
-print(preds_out.head(5))
 preds_out.to_csv('predictions.csv')
-
-
 submission = preds_out[['id', 'target']]
-print(submission.head(5))
 submission.to_csv('submission.csv',index=False)
+print("Complete")
+print()

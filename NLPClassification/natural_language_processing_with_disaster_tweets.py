@@ -76,7 +76,7 @@ val_dataset = DisasterDataset(val_encodings, val_labels.tolist())
 # #############################################################################
 training_args = TrainingArguments(
     output_dir='./results',          # output directory
-    num_train_epochs=7,              # total number of training epochs
+    num_train_epochs=4,              # total number of training epochs
     per_device_train_batch_size=16,  # batch size per device during training
     per_device_eval_batch_size=64,   # batch size for evaluation
     warmup_steps=10,                # number of warmup steps for learning rate scheduler

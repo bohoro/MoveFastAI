@@ -3,6 +3,9 @@
 /Tabular/outputs/*
 /ComputerVision/outputs/*
 /Tabular/multirun/*
+/NLPClassification/logs/*
+/NLPClassification/.ipynb_checkpoints/*
+/NLPClassification/v1model/*.bin
 Tabular/data/predictions/pssdp_predictions.csv
 Tabular/data/models/models/tmp.pth
 Tabular/data/models/models/tmp.pth
